@@ -48,7 +48,7 @@
         }
         #filePreviewImg { max-width: 100%; max-height: 150px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
 
-        /* --- STYLE GAMBAR POP-UP (DEKORASI DIKEMBALIKAN) --- */
+        /* --- STYLE GAMBAR POP-UP (DEKORASI) --- */
         .food-trigger {
             position: fixed;
             top: 18%; right: 5%;
@@ -115,7 +115,7 @@
     </div>
 </div>
 
-<!-- GAMBAR POP-UP TRIGGER (HIASAN PESTA DIKEMBALIKAN) -->
+<!-- GAMBAR POP-UP TRIGGER (HIASAN PESTA) -->
 <div class="food-trigger" id="foodBtn">
     <span class="party-emoji" style="top: -20px; left: -10px; animation: rotateEmoji 2s infinite;">✨</span>
     <span class="party-emoji" style="bottom: -10px; right: -5px; animation: rotateEmoji 3s infinite;">🎉</span>
@@ -166,7 +166,7 @@
                     <input type="number" id="hal" class="form-control" value="1" min="1" oninput="hitungTotal()">
                 </div>
 
-                <!-- Input Custom (Muncul jika pilih Custom) -->
+                <!-- Input Custom -->
                 <div id="sectionCustom" class="mb-3" style="display: none;">
                     <div class="row">
                         <div class="col-6">
@@ -188,7 +188,7 @@
                 <!-- FITUR CATATAN -->
                 <div class="mb-3">
                     <label class="form-label">Catatan Tambahan</label>
-                    <textarea id="catatan" class="form-control" rows="2" ></textarea>
+                    <textarea id="catatan" class="form-control" rows="2" placeholder="Contoh: Jilid lakban biru, dll"></textarea>
                 </div>
 
                 <!-- FITUR UPLOAD & PREVIEW -->
@@ -220,13 +220,7 @@
 </div>
 
 <script>
-    // FUNGSI NOTIFIKASI
-    const foodBtn = document.getElementById('foodBtn');
-    const notifOverlay = document.getElementById('notifOverlay');
-    foodBtn.addEventListener('click', () => notifOverlay.style.display = 'flex');
-    function tutupNotif() { notifOverlay.style.display = 'none'; }
-
-    // DATABASE SISWA
+    // --- DATABASE SISWA ---
     const dataSiswa = {
         "10A": ["Abiyu Daffa Khalfan", "Aisyah Irbah Zein", "Alfazari Munjiyat", "Alfiraqa ryeva", "Ayasha Yasmin Zakiah", "Azwa Azzahra", "Fadhil Putra Andriko", "Farid Ijmali Siregar", "Hajra Hayatun Nufus", "Hamid Assyadikhi", "Khansa Amira Ilmuna", "Khanza Hidayatul Khutsi", "Maharanie", "Muhammad Al-Faruq Tanjung", "Muhammad Ikhwan Maulana", "Nabil Tsany Latif", "Najwatul Jannah", "Nashra Hamdani", "Perina Putri Naima", "Rafael Alfatir Laska", "Rafiq Kesuma Agung", "Raisya Restu Putri", "Raisyah Putri Amirah Ritonga", "Tsabitah Hanin Sitompul"],
         "10B": ["Adifa Ayra Hermanda", "Aisyah Altafunnisa", "Anandya Rahmanissa Cintakami", "Anis Fatih Assahiddiq", "Dafafahd Varen", "Fachri Arrasyid", "Fauzul Sidiq", "Galih Farras Hazim", "Gayatri Puti Mahadewi", "Ghina Adhelia", "Hafizhah Salwa Azwar", "Haifa Faras Mulya", "Irsyadi Yusuf Ashiddiqie", "Lathifatul Arifa", "Muhammad Aiman Afif", "Muhammad Daffa", "Muhammad Rafi Riadi", "Muhammad Rafli Afant Arrayyan", "Muhammad Zidan Wali", "Naura Fauzhara Putri", "Prita Cemasari", "Puti Nazhira Maylatussyahda", "Sarah Fauziah", "Zahri Atha Lutfi"],
@@ -235,8 +229,21 @@
         "10E": ["Ahmad Syathir", "Annaufal Arsiga", "Azzahra Fakhira Aryani", "Brilliant Malik Duandra Fransisco", "Emir Fayyadhi", "Farel Paslazuwa", "Kamela Mahera Harahap", "Khalisha Rahmadhani", "Khaliza Fajrina", "Kindi Ziyad", "M. Irzal Hamid", "Muhammad Bonardo Lubis", "Muhammad Daffa Khalfani", "Muhammad Fauzan Hidayat", "Muhammad Syathir Al Azhar", "Nabilah", "Naila Khairiyah", "Naila Nafila", "Nazhifa Anantia Ramon", "Neysa Khansa Amira", "Putri Infi Salma", "Queenzhia Kastadinata", "Thahira Alva Zafirah", "Zulazmi Rahman"]
     };
 
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwno1JY1AZR3ToJFteySnjvuQiw9mFt8egM_I1hMHMgX-Dy-cPnEt79dJ3MFC-KjQg/exec"; 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTTST760YlxckPSdafBcEx9QNfTwO77NpSEJ7Lcd3uvu38OOa-5hDDc1OU8PLKb4I_/exec"; 
     const NO_ADMIN = "62895402410873";
+
+    // --- AUTO FILL PADA SAAT LOAD ---
+    window.onload = function() {
+        const savedKelas = localStorage.getItem('savedKelas');
+        const savedNama = localStorage.getItem('savedNama');
+        if (savedKelas) {
+            document.getElementById('kelas').value = savedKelas;
+            updateSiswa(); 
+            if (savedNama) {
+                document.getElementById('nama').value = savedNama;
+            }
+        }
+    };
 
     function updateSiswa() {
         const kelas = document.getElementById('kelas').value;
@@ -254,8 +261,7 @@
 
     function handleOpsiChange() {
         const val = document.getElementById('opsiPrint').value.split('|');
-        const metode = val[1];
-        if(metode === 'custom') {
+        if(val[1] === 'custom') {
             document.getElementById('sectionStandar').style.display = 'none';
             document.getElementById('sectionCustom').style.display = 'block';
         } else {
@@ -269,8 +275,7 @@
         const file = document.getElementById('fileInput').files[0];
         const container = document.getElementById('previewContainer');
         const display = document.getElementById('filePreview');
-        container.style.display = "block";
-        display.innerHTML = "";
+        container.style.display = "block"; display.innerHTML = "";
         if (file) {
             if (file.type.startsWith('image/')) {
                 const reader = new FileReader();
@@ -283,30 +288,29 @@
     function hitungTotal() {
         const val = document.getElementById('opsiPrint').value.split('|');
         const harga = parseInt(val[0]);
-        const metode = val[1];
         const copy = parseInt(document.getElementById('copy').value) || 1;
         let total = 0;
-
-        if (metode === 'custom') {
-            const warna = parseInt(document.getElementById('halWarna').value) || 0;
-            const bw = parseInt(document.getElementById('halBW').value) || 0;
-            total = (warna + bw) * copy * harga;
+        if (val[1] === 'custom') {
+            total = (parseInt(document.getElementById('halWarna').value || 0) + parseInt(document.getElementById('halBW').value || 0)) * copy * harga;
         } else {
-            const hal = parseInt(document.getElementById('hal').value) || 0;
-            total = hal * copy * harga;
+            total = (parseInt(document.getElementById('hal').value || 0)) * copy * harga;
         }
-
         document.getElementById('totalTampilan').innerText = "Rp " + total.toLocaleString('id-ID');
         return total;
     }
 
     function prosesOrder() {
-        const fileInput = document.getElementById('fileInput');
-        const nama = document.getElementById('nama').value;
         const kelas = document.getElementById('kelas').value;
+        const nama = document.getElementById('nama').value;
+        const fileInput = document.getElementById('fileInput');
+
         if (!kelas || !nama || fileInput.files.length === 0) {
             alert("Lengkapi data!"); return;
         }
+
+        // SIMPAN DATA (INGAT SAYA)
+        localStorage.setItem('savedKelas', kelas);
+        localStorage.setItem('savedNama', nama);
 
         document.getElementById('loading').style.display = "block";
         document.getElementById('btnSubmit').disabled = true;
@@ -316,17 +320,14 @@
         reader.onload = function(e) {
             const opsiText = document.getElementById('opsiPrint').options[document.getElementById('opsiPrint').selectedIndex].text;
             const isCustom = document.getElementById('opsiPrint').value.includes('custom');
+            
             let detailOrder = isCustom ? 
                 `${opsiText} (${document.getElementById('halWarna').value} Warna, ${document.getElementById('halBW').value} BW) x ${document.getElementById('copy').value} rangkap` :
                 `${opsiText} (${document.getElementById('hal').value} hal) x ${document.getElementById('copy').value} rangkap`;
 
             const payload = {
-                file: e.target.result,
-                filename: file.name,
-                nama: nama,
-                kelas: kelas,
-                jenis: detailOrder,
-                catatan: document.getElementById('catatan').value || "-",
+                file: e.target.result, filename: file.name, nama: nama, kelas: kelas,
+                jenis: detailOrder, catatan: document.getElementById('catatan').value || "-",
                 total: document.getElementById('totalTampilan').innerText
             };
 
@@ -334,14 +335,16 @@
             .then(res => res.json())
             .then(data => {
                 if(data.result === "success") {
-                    const pesan = `Halo Admin, saya mau order print.%0A%0A` +
-                                  `👤 Nama: *${nama}*%0A` +
-                                  `🏫 Kelas: *${kelas}*%0A` +
-                                  `📄 File: *${data.newFileName}*%0A` +
-                                  `⚙️ Detail: ${detailOrder}%0A` +
-                                  `📝 Catatan: ${payload.catatan}%0A` +
-                                  `💰 Total: *${payload.total}*`;
-                    window.location.href = `https://wa.me/${NO_ADMIN}?text=${pesan}`;
+                    // --- FIX EMOJI WA ---
+                    const pesanTeks = `Halo Admin, saya mau order print.\n\n` +
+                                      ` Nama: *${nama}*\n` +
+                                      ` Kelas: *${kelas}*\n` +
+                                      ` File: *${data.newFileName}*\n` +
+                                      ` Detail: ${detailOrder}\n` +
+                                      ` Catatan: ${payload.catatan}\n` +
+                                      ` Total: *${payload.total}*`;
+                    
+                    window.location.href = `https://wa.me/${NO_ADMIN}?text=${encodeURIComponent(pesanTeks)}`;
                 } else { alert("Error: " + data.error); resetStatus(); }
             }).catch(() => { alert("Gagal!"); resetStatus(); });
         };
@@ -352,6 +355,11 @@
         document.getElementById('loading').style.display = "none";
         document.getElementById('btnSubmit').disabled = false;
     }
+
+    const foodBtn = document.getElementById('foodBtn');
+    const notifOverlay = document.getElementById('notifOverlay');
+    foodBtn.addEventListener('click', () => notifOverlay.style.display = 'flex');
+    function tutupNotif() { notifOverlay.style.display = 'none'; }
 </script>
 </body>
 </html>
